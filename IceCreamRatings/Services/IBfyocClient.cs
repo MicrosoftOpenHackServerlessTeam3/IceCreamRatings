@@ -7,16 +7,16 @@ namespace IceCreamRatings.Services
 {
     public interface IBfyocClient
     {
-        [Get("api/GetProducts")]
+        [Get("/api/GetProducts")]
         public Task<IEnumerable<ProductResponse>> GetProductsAsync();
 
-        [Get("api/GetProduct")]
+        [Get("/api/GetProduct")]
         public Task<ProductResponse> GetProductAsync([Query] string productId);
 
-        [Get("api/GetUsers")]
+        [Get("/api/GetUsers")]
         public Task<IEnumerable<UserResponse>> GetUsersAsync();
 
-        [Get("api/GetUser")]
+        [Get("/api/GetUser")]
         public Task<UserResponse> GetUserAsync([Query] string userId);
     }
 }
