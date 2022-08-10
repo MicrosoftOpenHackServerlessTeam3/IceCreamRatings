@@ -21,6 +21,14 @@ namespace IceCreamRatings.Repositories
         }
 
         /// <summary>
+        ///     Adds the specified entity item in repository.
+        /// </summary>
+        public virtual async Task AddAsync(Rate entity, CancellationToken cancellationToken)
+        {
+            await _rateCollection.InsertOneAsync(entity, cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
         ///     Adds the specified entities list in repository.
         /// </summary>
         public virtual async Task AddRangeAsync(IEnumerable<Rate> entities, CancellationToken cancellationToken)

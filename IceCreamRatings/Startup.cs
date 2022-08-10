@@ -13,14 +13,13 @@ public class Startup : FunctionsStartup
 {
     public override void Configure(IFunctionsHostBuilder builder)
     {
+        var configuration = builder.GetContext().Configuration;
 
         builder.Services
             .AddRefitClient<IBfyocClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://serverlessohapi.azurewebsites.net/"));
-
-        var databaseSettings = builder.GetContext().Configuration["Database_ConnectionString"];
-
-        var clientSettings = MongoClientSettings.FromConnectionString(databaseSettings);
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["BfyocClient_Address"]));
+        
+        var clientSettings = MongoClientSettings.FromConnectionString(configuration["Database_ConnectionString"]);
         builder.Services.AddSingleton<IMongoClient>(new MongoClient(clientSettings));
         builder.Services.AddSingleton<RateRepository>();
     }
