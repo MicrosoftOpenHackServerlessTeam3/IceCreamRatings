@@ -14,13 +14,22 @@ public class Startup : FunctionsStartup
 {
     public override void Configure(IFunctionsHostBuilder builder)
     {
+        var context = builder.GetContext();
+
+        var config = new ConfigurationBuilder()
+            .SetBasePath(context.ApplicationRootPath)
+            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
+
         var configuration = builder.GetContext().Configuration;
 
         builder.Services
             .AddRefitClient<IBfyocClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["BfyocClient_Address"]));
 
-        var clientSettings = MongoClientSettings.FromConnectionString(Environment.GetEnvironmentVariable("ConnectionStrings:MONGODB"));
+        var connection = config.GetConnectionStringOrSetting("MONGODB");
+        var clientSettings = MongoClientSettings.FromConnectionString(connection);
         builder.Services.AddSingleton<IMongoClient>(new MongoClient(clientSettings));
         builder.Services.AddSingleton<RateRepository>();
     }
