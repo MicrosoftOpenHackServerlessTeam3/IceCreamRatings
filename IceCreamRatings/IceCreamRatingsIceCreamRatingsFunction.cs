@@ -43,6 +43,8 @@ public class IceCreamRatingsIceCreamRatingsFunction
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+        if(req.Body is null) return new BadRequestObjectResult("Payload obrigatorio");
+
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync();
 
