@@ -39,7 +39,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
     [OpenApiRequestBody(contentType: "application/json", typeof(Rate))]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public async Task<IActionResult> CreateRating(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "api/v1/ratings")] HttpRequest req, CancellationToken cancellationToken)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -70,7 +70,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public async Task<IActionResult> GetRating(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/v1/rating")] HttpRequest req, CancellationToken cancellationToken)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -87,7 +87,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public async Task<IActionResult> GetRatings(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/v1/ratings")] HttpRequest req, CancellationToken cancellationToken)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
