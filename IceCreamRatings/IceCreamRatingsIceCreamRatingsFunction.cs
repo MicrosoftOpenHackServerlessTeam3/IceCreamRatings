@@ -9,6 +9,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -69,12 +70,16 @@ public class IceCreamRatingsIceCreamRatingsFunction
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public async Task<IActionResult> GetRating(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/v1/rating")] HttpRequest req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+        var ratingId = req.Query["ratingId"];
 
-        return new OkObjectResult("o");
+        var rating = await _rateRepository.GetSingleOrDefaultAsync(rates => rates.Id == new Guid(ratingId), cancellationToken);
+
+
+        return new OkObjectResult(rating);
     }
 
 
