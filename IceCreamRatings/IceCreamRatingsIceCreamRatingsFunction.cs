@@ -60,7 +60,9 @@ public class IceCreamRatingsIceCreamRatingsFunction
         if (users.All(x => x.UserId != data.UserId))
             return new BadRequestObjectResult("Usuário não existe");
 
-        if (data.Rating is < 0 and < 5)
+
+
+        if (data.Rating is < 0 and < 5)s
             return new BadRequestObjectResult("Nota deve ser de zero a cinco.");
 
         await _rateRepository.AddAsync(data, cancellationToken);
