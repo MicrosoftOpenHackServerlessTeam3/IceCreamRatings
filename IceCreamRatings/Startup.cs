@@ -26,7 +26,7 @@ public class Startup : FunctionsStartup
 
         builder.Services
             .AddRefitClient<IBfyocClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["BfyocClient_Address"]));
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://serverlessohapi.azurewebsites.net"));
 
         var connection = config.GetConnectionStringOrSetting("MONGODB");
         var clientSettings = MongoClientSettings.FromConnectionString(connection);
