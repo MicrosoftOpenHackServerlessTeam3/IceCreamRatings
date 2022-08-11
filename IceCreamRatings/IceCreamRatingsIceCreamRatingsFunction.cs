@@ -33,7 +33,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
         _bfyocClient = bfyocClient;
         _logger = log;
     }
-
+    
     [FunctionName("CreateRating")]
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiRequestBody(contentType: "application/json", typeof(Rate))]
@@ -59,9 +59,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
 
         if (users.All(x => x.UserId != data.UserId))
             return new BadRequestObjectResult("Usuário não existe");
-
-
-
+        
         if (data.Rating is < 0 and < 5)
             return new BadRequestObjectResult("Nota deve ser de zero a cinco.");
 
@@ -105,5 +103,60 @@ public class IceCreamRatingsIceCreamRatingsFunction
         }
 
         return new OkObjectResult(ratings);
+    }
+
+    [FunctionName("GetProduct")]
+    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    public async Task<IActionResult> GetProduct(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+        var productId = req.Query["productId"];
+
+        var product = await _bfyocClient.GetProductAsync(productId);
+        
+        return new OkObjectResult(product);
+    }
+
+
+    [FunctionName("GetProducts")]
+    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    public async Task<IActionResult> GetProducts(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+        var products = await _bfyocClient.GetProductsAsync();
+
+        return new OkObjectResult(products);
+    }
+
+    [FunctionName("GetUser")]
+    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    public async Task<IActionResult> GetUser(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+        var userId = req.Query["userId"];
+
+        var user = await _bfyocClient.GetUserAsync(userId);
+        
+        return new OkObjectResult(user);
+    }
+
+    [FunctionName("GetUsers")]
+    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+    public async Task<IActionResult> GetUsers(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+        var users = await _bfyocClient.GetUsersAsync();
+
+        return new OkObjectResult(users);
     }
 }
