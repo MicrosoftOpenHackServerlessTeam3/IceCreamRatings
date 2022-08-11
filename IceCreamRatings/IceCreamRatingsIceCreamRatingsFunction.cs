@@ -62,7 +62,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
 
 
 
-        if (data.Rating is < 0 and < 5)s
+        if (data.Rating is < 0 and < 5)
             return new BadRequestObjectResult("Nota deve ser de zero a cinco.");
 
         await _rateRepository.AddAsync(data, cancellationToken);
