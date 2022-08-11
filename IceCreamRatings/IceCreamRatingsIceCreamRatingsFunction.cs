@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IceCreamRatings;
@@ -37,15 +38,12 @@ public class IceCreamRatingsIceCreamRatingsFunction
     [OpenApiRequestBody(contentType: "application/json", typeof(Rate))]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public async Task<IActionResult> CreateRating(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "api/v1/ratings")] HttpRequest req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        string requestBody = string.Empty;
-        using (StreamReader streamReader = new StreamReader(req.Body))
-        {
-            requestBody = await streamReader.ReadToEndAsync();
-        }
+        using var streamReader = new StreamReader(req.Body);
+        var requestBody = await streamReader.ReadToEndAsync();
 
         var data = JsonConvert.DeserializeObject<Rate>(requestBody);
 
@@ -62,7 +60,7 @@ public class IceCreamRatingsIceCreamRatingsFunction
         if (data.Rating is < 0 and < 5)
             return new BadRequestObjectResult("Nota deve ser de zero a cinco.");
 
-        await _rateRepository.AddAsync(data, default);
+        await _rateRepository.AddAsync(data, cancellationToken);
 
         return new CreatedResult("rate", data);
     }
@@ -84,11 +82,19 @@ public class IceCreamRatingsIceCreamRatingsFunction
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
     public async Task<IActionResult> GetRatings(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "api/v1/ratings")] HttpRequest req, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+        var userId = req.Query["userId"];
 
-        return new OkObjectResult("o");
+        var ratings = await _rateRepository.GetAllAsync(cancellationToken);
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            ratings = ratings.Where(x => x.UserId.Equals(userId)).ToList();
+        }
+
+        return new OkObjectResult(ratings);
     }
 }

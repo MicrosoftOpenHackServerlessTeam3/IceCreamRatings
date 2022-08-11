@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "Database_ConnectionString": "mongodb://cosmosdb-team3:iPFx8w7BbxUClPL0oHNpYAvJ3PcJSKwXxdt7zjapkXJTYS7U82AWPvz5Kri7qUky8gjaQt5vHZiw7mpD4FaKdQ==@cosmosdb-team3.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cosmosdb-team3@",
+    "BfyocClient_Address": "https://serverlessohapi.azurewebsites.net"
+  }
+}
