@@ -20,8 +20,7 @@ public class Startup : FunctionsStartup
             .AddRefitClient<IBfyocClient>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration["BfyocClient_Address"]));
 
-        var connectionString = configuration.GetConnectionString("MONGODB");
-        var clientSettings = MongoClientSettings.FromConnectionString(connectionString);
+        var clientSettings = MongoClientSettings.FromConnectionString(Environment.GetEnvironmentVariable("ConnectionStrings:MONGODB"));
         builder.Services.AddSingleton<IMongoClient>(new MongoClient(clientSettings));
         builder.Services.AddSingleton<RateRepository>();
     }
